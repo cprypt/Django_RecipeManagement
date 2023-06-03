@@ -3,21 +3,20 @@
 <!-- 후기 수정 -->
 <div class="container my-3">
     <h5 class="my-3 border-bottom pb-2">후기 수정</h5>
-    <form method="post">
+    <form class="row g-3" method="post">
         {% csrf_token %}
         {% include "form_errors.html" %}
-        <div class="mb-3">
-            <div class="mb-3">
-                <label for="score" class="form-label">평가</label>
-                <span id="value"></span>
-                <input type="range" class="form-control" name="score" id="score" min="1" max="10" step="1" value="{{ form.score.value|default_if_none:'' }}">
-            </div>
-            <div class="mb-3">
-                <label for="content" class="form-label">후기</label>
-                <textarea name="content" id="content" class="form-control" rows="3">{{ form.content.value|default_if_none:'' }}</textarea>
-            </div>
+        <div class="col-md-6">
+            <label for="score" class="form-label">평가</label>
+            <span id="value" class="form-label"></span>
+            <input type="range" class="form-range" name="score" id="score" min="1" max="10" step="1" value="{{ form.score.value|default_if_none:'' }}">
+        <div class="col-md-12">
+            <label for="content" class="form-label">후기</label>
+            <textarea name="content" id="content" class="form-control" rows="6">{{ form.content.value|default_if_none:'' }}</textarea>
         </div>
-        <button type="submit" class="btn btn-primary">저장</button>
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-dark">저장</button>
+        </div>
     </form>
 </div>
 {% endblock %}

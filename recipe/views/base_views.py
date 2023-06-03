@@ -25,7 +25,7 @@ def index(request):
         recipe_list = recipe_list.filter(
             Q(category__icontains=cate)  # 카테고리 검색
         ).distinct()
-    paginator = Paginator(recipe_list, 5)  # 페이지당 5개씩 보여주기
+    paginator = Paginator(recipe_list, 5)  # 페이지당 3개씩 보여주기
     page_obj = paginator.get_page(page)
     context = {'recipe_list': page_obj, 'page': page, 'kw': kw, 'cate': cate}
     return render(request, 'recipe/recipe_list.html', context)

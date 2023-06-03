@@ -18,7 +18,7 @@
     <div class="card my-3">
         <div class="card-body">
             <div class="card-text">
-                <img src="{{ recipe.image.url }}" width="300">
+                <img src="{{ recipe.image.url }}" class="img-thumbnail" width="500">
             </div>
             <div class="card-text">카테고리: {{ recipe.category }}</div>
             <div class="card-text">난이도: {% for i in "x"|rjust:recipe.level %}★{% endfor %}</div>
@@ -38,8 +38,8 @@
             </div>
             <div class="my-3">
                 {% if request.user == recipe.author %}
-                <a href="{% url 'recipe:recipe_modify' recipe.id  %}" class="btn btn-sm btn-outline-secondary">수정</a>
-                <a href="javascript:void(0)" class="delete btn btn-sm btn-outline-secondary" data-uri="{% url 'recipe:recipe_delete' recipe.id  %}">삭제</a>
+                <a href="{% url 'recipe:recipe_modify' recipe.id  %}" class="btn btn-sm btn-outline-dark">수정</a>
+                <a href="javascript:void(0)" class="delete btn btn-sm btn-outline-dark" data-uri="{% url 'recipe:recipe_delete' recipe.id  %}">삭제</a>
                 {% endif %}
             </div>
         </div>
@@ -54,33 +54,12 @@
             <div class="card-text">용량 단위: {{ element.unit }}</div>
             <div class="my-3">
                 {% if request.user == recipe.author %}
-                <a href="#" class="delete btn btn-sm btn-outline-secondary " data-uri="{% url 'recipe:element_delete' element.id  %}">삭제</a>
+                <a href="#" class="delete btn btn-sm btn-outline-dark " data-uri="{% url 'recipe:element_delete' element.id  %}">삭제</a>
                 {% endif %}
             </div>
         </div>
     </div>
     {% endfor %}
-    <!-- 재료 등록 -->
-    {% if request.user == recipe.author %}
-    <form action="{% url 'recipe:element_create' recipe.id %}" method="post" class="my-3">
-        {% csrf_token %}
-        <div class="mb-3">
-            <div class="mb-3">
-                <label for="ename" class="form-label">재료 이름</label>
-                <input type="text" class="form-control" name="ename" id="ename">
-            </div>
-            <div class="mb-3">
-                <label for="put" class="form-label">투입 용량</label>
-                <input type="number" class="form-control" name="put" id="put">
-            </div>
-            <div class="mb-3">
-                <label for="unit" class="form-label">용량 단위</label>
-                <input type="text" class="form-control" name="unit" id="unit">
-            </div>
-        </div>
-        <input type="submit" value="재료 추가" class="btn btn-primary">
-    </form>
-    {% endif %}
     <!-- 조리법 -->
     {% for cooking in recipe.cooking_set.all %}
     <a id="cooking_{{ cooking.id }}"></a>
@@ -90,29 +69,62 @@
             <div class="card-text">{{ cooking.process|mark }}</div>
             <div class="my-3">
                 {% if request.user == recipe.author %}
-                <a href="#" class="delete btn btn-sm btn-outline-secondary " data-uri="{% url 'recipe:cooking_delete' cooking.id  %}">삭제</a>
+                <a href="#" class="delete btn btn-sm btn-outline-dark " data-uri="{% url 'recipe:cooking_delete' cooking.id  %}">삭제</a>
                 {% endif %}
             </div>
         </div>
     </div>
     {% endfor %}
-    <!-- 조리법 등록 -->
-    {% if request.user == recipe.author %}
-    <form action="{% url 'recipe:cooking_create' recipe.id %}" method="post" class="my-3">
-        {% csrf_token %}
-        <div class="mb-3">
-            <div class="mb-3">
-                <label for="order" class="form-label">조리 순서</label>
-                <input type="number" class="form-control" name="order" id="order">
+    <!-- 재료 등록 -->
+    <div class="row g-3">
+        {% if request.user == recipe.author %}
+        <form action="{% url 'recipe:element_create' recipe.id %}" method="post" class="row g-3">
+            {% csrf_token %}
+            <div class="col-md-5">
+                <div class="input-group">
+                    <label for="ename" class="input-group-text">재료 이름</label>
+                    <input type="text" class="form-control" name="ename" id="ename">
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="process" class="form-label">조리 방법</label>
-                <textarea name="process" id="process" class="form-control" rows="3"></textarea>
+            <div class="col-md-3">
+                <div class="input-group">
+                    <label for="put" class="input-group-text">투입 용량</label>
+                    <input type="number" class="form-control" name="put" id="put">
+                </div>
             </div>
-        </div>
-        <input type="submit" value="조리법 추가" class="btn btn-primary">
-    </form>
-    {% endif %}
+            <div class="col-md-3">
+                <div class="input-group">
+                    <label for="unit" class="input-group-text">용량 단위</label>
+                    <input type="text" class="form-control" name="unit" id="unit">
+                </div>
+            </div>
+            <div class="col-md-1">
+                <input type="submit" value="재료 추가" class="btn btn-dark">
+            </div>
+        </form>
+        {% endif %}
+        <!-- 조리법 등록 -->
+        {% if request.user == recipe.author %}
+        <form action="{% url 'recipe:cooking_create' recipe.id %}" method="post" class="row g-3">
+            {% csrf_token %}
+            <div class="col-md-3">
+                <div class="input-group">
+                    <label for="order" class="input-group-text">조리 순서</label>
+                    <input type="number" class="form-control" name="order" id="order">
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="input-group">
+                    <label for="process" class="input-group-text">조리 방법</label>
+                    <textarea name="process" id="process" class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <input type="submit" value="조리법 추가" class="btn btn-dark">
+            </div>
+        </form>
+        {% endif %}
+    </div>
     <!-- 오류 표시 Start -->
     {% if form.errors %}
     <div class="alert alert-danger" role="alert">
@@ -149,28 +161,32 @@
             </div>
             <div class="my-3">
                 {% if request.user == detail.author %}
-                <a href="{% url 'recipe:detail_modify' detail.id  %}" class="btn btn-sm btn-outline-secondary">수정</a>
-                <a href="#" class="delete btn btn-sm btn-outline-secondary " data-uri="{% url 'recipe:detail_delete' detail.id  %}">삭제</a>
+                <a href="{% url 'recipe:detail_modify' detail.id  %}" class="btn btn-sm btn-outline-dark">수정</a>
+                <a href="#" class="delete btn btn-sm btn-outline-dark" data-uri="{% url 'recipe:detail_delete' detail.id  %}">삭제</a>
                 {% endif %}
             </div>
         </div>
     </div>
     {% endfor %}
     <!-- 후기 등록 -->
-    <form action="{% url 'recipe:detail_create' recipe.id %}" method="post" class="my-3">
+    <form action="{% url 'recipe:detail_create' recipe.id %}" method="post" class="row g-3">
         {% csrf_token %}
-        <div class="mb-3">
-            <div class="mb-3">
-                <label for="score" class="form-label">평가</label>
-                <span id="value"></span>
-                <input type="range" class="form-control" name="score" id="score" min="1" max="10" step="1">
+        <div class="col-md-3">
+            <div class="input-group">
+                <label for="score" class="input-group-text">평가</label>
+                <span id="value" class="input-group-text"></span>
+                <input type="range" class="form-range" name="score" id="score" min="1" max="10" step="1">
             </div>
-            <div class="mb-3">
-                <label for="content" class="form-label">후기</label>
+        </div>
+        <div class="col-md-9">
+            <div class="input-group">
+                <label for="content" class="input-group-text">후기</label>
                 <textarea name="content" id="content" class="form-control" rows="3"></textarea>
             </div>
         </div>
-        <input type="submit" value="후기 등록" class="btn btn-primary">
+        <div class="col-md-12">
+            <input type="submit" value="후기 등록" class="btn btn-dark">
+        </div>
     </form>
 </div>
 {% endblock %}
@@ -190,7 +206,7 @@
     output.innerHTML = "★".repeat(slider.value) + "☆".repeat(10 - slider.value);
 
     slider.oninput = function() {
-        output.innerHTML = "★".repeat(this.value) + "☆".repeat(10-this.value);
+        output.innerHTML = "★".repeat(this.value) + "☆".repeat(10 - this.value);
     }
 </script>
 {% endblock %}

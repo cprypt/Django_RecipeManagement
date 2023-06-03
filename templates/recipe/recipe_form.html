@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container">
     <h5 class="my-3 border-bottom pb-2">레시피 등록 / 수정</h5>
-    <form method="post", enctype="multipart/form-data">
+    <form class="row g-3" method="post", enctype="multipart/form-data">
         {% csrf_token %}
         <!-- 오류표시 Start -->
         {% if form.errors %}
@@ -18,18 +18,18 @@
         </div>
         {% endif %}
         <!-- 오류표시 End -->
-        <div class="mb-3">
+        <div class="col-md-6">
             <label for="name" class="form-label">레시피 이름</label>
             <input type="text" class="form-control" name="name" id="name" value="{{ form.name.value|default_if_none:'' }}">
         </div>
-        <div class="mb-3">
+        <div class="col-md-6">
             <label for="image" class="form-label">레시피 사진</label>
             <input type="file" class="form-control" name="image" id="image">
         </div>
-        <div class="mb-3">
+        <div class="col-md-6">
             <label for="category" class="form-label">카테고리</label>
             {% if form.category.value == "한식" %}
-            <select class="form-control" name="category" id="category">
+            <select class="form-select" name="category" id="category">
                 <option value="" disabled>=== 선택 ===</option>
                 <option value="한식" selected>한식</option>
                 <option value="중식">중식</option>
@@ -37,7 +37,7 @@
                 <option value="양식">양식</option>
             </select>
             {% elif form.category.value == "중식" %}
-            <select class="form-control" name="category" id="category">
+            <select class="form-select" name="category" id="category">
                 <option value="" disabled>=== 선택 ===</option>
                 <option value="한식">한식</option>
                 <option value="중식" selected>중식</option>
@@ -45,7 +45,7 @@
                 <option value="양식">양식</option>
             </select>
             {% elif form.category.value == "일식" %}
-            <select class="form-control" name="category" id="category">
+            <select class="form-select" name="category" id="category">
                 <option value="" disabled>=== 선택 ===</option>
                 <option value="한식">한식</option>
                 <option value="중식">중식</option>
@@ -53,7 +53,7 @@
                 <option value="양식">양식</option>
             </select>
             {% elif form.category.value == "양식" %}
-            <select class="form-control" name="category" id="category">
+            <select class="form-select" name="category" id="category">
                 <option value="" disabled>=== 선택 ===</option>
                 <option value="한식">한식</option>
                 <option value="중식">중식</option>
@@ -61,7 +61,7 @@
                 <option value="양식" selected>양식</option>
             </select>
             {% else %}
-            <select class="form-control" name="category" id="category">
+            <select class="form-select" name="category" id="category">
                 <option value="" selected disabled>=== 선택 ===</option>
                 <option value="한식">한식</option>
                 <option value="중식">중식</option>
@@ -70,20 +70,22 @@
             </select>
             {% endif %}
         </div>
-        <div class="mb-3">
+        <div class="col-md-6">
             <label for="level" class="form-label">난이도</label>
-            <span id="value"></span>
-            <input type="range" class="form-control" name="level" id="level" min="1" max="10" step="1" value="{{ form.level.value|default_if_none:'' }}">
+            <span id="value" class="form-label"></span>
+            <input type="range" class="form-range" name="level" id="level" min="1" max="10" step="1" value="{{ form.level.value|default_if_none:'' }}">
         </div>
-        <div class="mb-3">
+        <div class="col-md-6">
             <label for="tool" class="form-label">조리 도구</label>
             <input type="text" class="form-control" name="tool" id="tool" value="{{ form.tool.value|default_if_none:'' }}">
         </div>
-        <div class="mb-3">
+        <div class="col-md-6">
             <label for="duration" class="form-label">조리 시간 (일 시:분:초)</label>
             <input type="text" class="form-control" name="duration" id="duration" value="{{ form.duration.value|default_if_none:'' }}">
         </div>
-        <button type="submit" class="btn btn-primary">저장</button>
+        <div class="col-12">
+            <button type="submit" class="btn btn-dark">저장</button>
+        </div>
     </form>
 </div>
 {% endblock %}
