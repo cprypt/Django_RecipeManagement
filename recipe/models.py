@@ -27,6 +27,7 @@ class Element(models.Model):
     
 class Cooking(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    order = models.IntegerField()
     process = models.TextField()
 
 

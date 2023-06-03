@@ -25,8 +25,8 @@ def cooking_create(request, recipe_id):
 
 
 @login_required(login_url='common:login')
-def cooking_delete(request, element_id):
-    cooking = get_object_or_404(Cooking, pk=element_id)
+def cooking_delete(request, cooking_id):
+    cooking = get_object_or_404(Cooking, pk=cooking_id)
     if request.user != cooking.recipe.author:
         messages.error(request, '삭제 권한이 없습니다')
     else:

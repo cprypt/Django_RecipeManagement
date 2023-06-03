@@ -30,8 +30,9 @@ class ElementForm(forms.ModelForm):
 class CookingForm(forms.ModelForm):
     class Meta:
         model = Cooking
-        fields = ['process']
+        fields = ['order', 'process']
         labels = {
+            'order': '조리 순서',
             'process': '조리 방법',
         }
 

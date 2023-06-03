@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container">
-    <h5 class="my-3 border-bottom pb-2">레시피 등록</h5>
+    <h5 class="my-3 border-bottom pb-2">레시피 등록 / 수정</h5>
     <form method="post", enctype="multipart/form-data">
         {% csrf_token %}
         <!-- 오류표시 Start -->
@@ -24,7 +24,7 @@
         </div>
         <div class="mb-3">
             <label for="image" class="form-label">레시피 사진</label>
-            <div type="file" class="form-control" name="image" id="image">{{ form.image|default_if_none:'' }}</div>
+            <input type="file" class="form-control" name="image" id="image">
         </div>
         <div class="mb-3">
             <label for="category" class="form-label">카테고리</label>
@@ -72,6 +72,7 @@
         </div>
         <div class="mb-3">
             <label for="level" class="form-label">난이도</label>
+            <span id="value"></span>
             <input type="range" class="form-control" name="level" id="level" min="1" max="10" step="1" value="{{ form.level.value|default_if_none:'' }}">
         </div>
         <div class="mb-3">
@@ -79,10 +80,21 @@
             <input type="text" class="form-control" name="tool" id="tool" value="{{ form.tool.value|default_if_none:'' }}">
         </div>
         <div class="mb-3">
-            <label for="duration" class="form-label">조리 시간</label>
+            <label for="duration" class="form-label">조리 시간 (일 시:분:초)</label>
             <input type="text" class="form-control" name="duration" id="duration" value="{{ form.duration.value|default_if_none:'' }}">
         </div>
         <button type="submit" class="btn btn-primary">저장</button>
     </form>
 </div>
+{% endblock %}
+{% block script %}
+<script type='text/javascript'>
+    var slider = document.getElementById("level");
+    var output = document.getElementById("value");
+    output.innerHTML = "★".repeat(slider.value) + "☆".repeat(10 - slider.value);
+
+    slider.oninput = function() {
+        output.innerHTML = "★".repeat(this.value) + "☆".repeat(10 - this.value);
+    }
+</script>
 {% endblock %}

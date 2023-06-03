@@ -14,15 +14,14 @@
     </div>
     {% endif %}
     <!-- 기본 정보 -->
-    <h2 class="border-bottom py-2">레시피 이름: {{ recipe.name }}</h2>
+    <h2 class="border-bottom py-2">{{ recipe.name }}</h2>
     <div class="card my-3">
         <div class="card-body">
             <div class="card-text">
-                레시피 사진:
                 <img src="{{ recipe.image.url }}" width="300">
             </div>
             <div class="card-text">카테고리: {{ recipe.category }}</div>
-            <div class="card-text">난이도: {{ recipe.level }}</div>
+            <div class="card-text">난이도: {% for i in "x"|rjust:recipe.level %}★{% endfor %}</div>
             <div class="card-text">조리 도구: {{ recipe.tool }}</div>
             <div class="card-text">조리 시간: {{ recipe.duration }}</div>
             <div class="d-flex justify-content-end">
@@ -62,6 +61,7 @@
     </div>
     {% endfor %}
     <!-- 재료 등록 -->
+    {% if request.user == recipe.author %}
     <form action="{% url 'recipe:element_create' recipe.id %}" method="post" class="my-3">
         {% csrf_token %}
         <div class="mb-3">
@@ -78,15 +78,16 @@
                 <input type="text" class="form-control" name="unit" id="unit">
             </div>
         </div>
-        <input type="submit" value="저장" class="btn btn-primary">
+        <input type="submit" value="재료 추가" class="btn btn-primary">
     </form>
+    {% endif %}
     <!-- 조리법 -->
     {% for cooking in recipe.cooking_set.all %}
     <a id="cooking_{{ cooking.id }}"></a>
     <div class="card my-3">
         <div class="card-body">
-            <div class="card-text">순서: {{ cooking.id }}</div>
-            <div class="card-text">조리 방법: {{ cooking.process|mark }}</div>
+            <div class="card-text">조리 순서: {{ cooking.order }}</div>
+            <div class="card-text">{{ cooking.process|mark }}</div>
             <div class="my-3">
                 {% if request.user == recipe.author %}
                 <a href="#" class="delete btn btn-sm btn-outline-secondary " data-uri="{% url 'recipe:cooking_delete' cooking.id  %}">삭제</a>
@@ -96,16 +97,22 @@
     </div>
     {% endfor %}
     <!-- 조리법 등록 -->
+    {% if request.user == recipe.author %}
     <form action="{% url 'recipe:cooking_create' recipe.id %}" method="post" class="my-3">
         {% csrf_token %}
         <div class="mb-3">
+            <div class="mb-3">
+                <label for="order" class="form-label">조리 순서</label>
+                <input type="number" class="form-control" name="order" id="order">
+            </div>
             <div class="mb-3">
                 <label for="process" class="form-label">조리 방법</label>
                 <textarea name="process" id="process" class="form-control" rows="3"></textarea>
             </div>
         </div>
-        <input type="submit" value="저장" class="btn btn-primary">
+        <input type="submit" value="조리법 추가" class="btn btn-primary">
     </form>
+    {% endif %}
     <!-- 오류 표시 Start -->
     {% if form.errors %}
     <div class="alert alert-danger" role="alert">
@@ -120,14 +127,14 @@
     </div>
     {% endif %}
     <!-- 오류 표시 End -->
-    <!-- 댓글 -->
-    <h5 class="border-bottom my-3 py-2">{{ recipe.detail_set.count }}개의 댓글이 있습니다.</h5>
+    <!-- 후기 -->
+    <h5 class="border-bottom my-3 py-2">{{ recipe.detail_set.count }}개의 후기가 있습니다.</h5>
     {% for detail in recipe.detail_set.all %}
     <a id="detail_{{ detail.id }}"></a>
     <div class="card my-3">
         <div class="card-body">
-            <div class="card-text">평가: {{ detail.score }}</div>
-            <div class="card-text">후기{{ detail.content|mark }}</div>
+            <div class="card-text">{% for i in ""|ljust:detail.score %}★{% endfor %}</div>
+            <div class="card-text">{{ detail.content|mark }}</div>
             <div class="d-flex justify-content-end">
                 {% if detail.modify_date %}
                 <div class="badge bg-light text-dark p-2 text-start mx-3">
@@ -149,12 +156,13 @@
         </div>
     </div>
     {% endfor %}
-    <!-- 댓글 등록 -->
+    <!-- 후기 등록 -->
     <form action="{% url 'recipe:detail_create' recipe.id %}" method="post" class="my-3">
         {% csrf_token %}
         <div class="mb-3">
             <div class="mb-3">
                 <label for="score" class="form-label">평가</label>
+                <span id="value"></span>
                 <input type="range" class="form-control" name="score" id="score" min="1" max="10" step="1">
             </div>
             <div class="mb-3">
@@ -162,7 +170,7 @@
                 <textarea name="content" id="content" class="form-control" rows="3"></textarea>
             </div>
         </div>
-        <input type="submit" value="저장" class="btn btn-primary">
+        <input type="submit" value="후기 등록" class="btn btn-primary">
     </form>
 </div>
 {% endblock %}
@@ -176,5 +184,13 @@
             };
         });
     });
+
+    var slider = document.getElementById("score");
+    var output = document.getElementById("value");
+    output.innerHTML = "★".repeat(slider.value) + "☆".repeat(10 - slider.value);
+
+    slider.oninput = function() {
+        output.innerHTML = "★".repeat(this.value) + "☆".repeat(10-this.value);
+    }
 </script>
 {% endblock %}
