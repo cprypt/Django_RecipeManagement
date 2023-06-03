@@ -45,7 +45,82 @@
             </div>
         </div>
     </div>
-    <!-- 상세 정보 -->
+    <!-- 재료 -->
+    {% for element in recipe.element_set.all %}
+    <a id="element_{{ element.id }}"></a>
+    <div class="card my-3">
+        <div class="card-body">
+            <div class="card-text">재료 이름: {{ element.ename }}</div>
+            <div class="card-text">투입 용량: {{ element.put }}</div>
+            <div class="card-text">용량 단위: {{ element.unit }}</div>
+            <div class="my-3">
+                {% if request.user == recipe.author %}
+                <a href="#" class="delete btn btn-sm btn-outline-secondary " data-uri="{% url 'recipe:element_delete' element.id  %}">삭제</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <!-- 재료 등록 -->
+    <form action="{% url 'recipe:element_create' recipe.id %}" method="post" class="my-3">
+        {% csrf_token %}
+        <div class="mb-3">
+            <div class="mb-3">
+                <label for="ename" class="form-label">재료 이름</label>
+                <input type="text" class="form-control" name="ename" id="ename">
+            </div>
+            <div class="mb-3">
+                <label for="put" class="form-label">투입 용량</label>
+                <input type="number" class="form-control" name="put" id="put">
+            </div>
+            <div class="mb-3">
+                <label for="unit" class="form-label">용량 단위</label>
+                <input type="text" class="form-control" name="unit" id="unit">
+            </div>
+        </div>
+        <input type="submit" value="저장" class="btn btn-primary">
+    </form>
+    <!-- 조리법 -->
+    {% for cooking in recipe.cooking_set.all %}
+    <a id="cooking_{{ cooking.id }}"></a>
+    <div class="card my-3">
+        <div class="card-body">
+            <div class="card-text">순서: {{ cooking.id }}</div>
+            <div class="card-text">조리 방법: {{ cooking.process|mark }}</div>
+            <div class="my-3">
+                {% if request.user == recipe.author %}
+                <a href="#" class="delete btn btn-sm btn-outline-secondary " data-uri="{% url 'recipe:cooking_delete' cooking.id  %}">삭제</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <!-- 조리법 등록 -->
+    <form action="{% url 'recipe:cooking_create' recipe.id %}" method="post" class="my-3">
+        {% csrf_token %}
+        <div class="mb-3">
+            <div class="mb-3">
+                <label for="process" class="form-label">조리 방법</label>
+                <textarea name="process" id="process" class="form-control" rows="3"></textarea>
+            </div>
+        </div>
+        <input type="submit" value="저장" class="btn btn-primary">
+    </form>
+    <!-- 오류 표시 Start -->
+    {% if form.errors %}
+    <div class="alert alert-danger" role="alert">
+        {% for field in form %}
+        {% if field.errors %}
+        <div>
+            <strong>{{ field.label }}</strong>
+            {{ field.errors }}
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+    <!-- 오류 표시 End -->
+    <!-- 댓글 -->
     <h5 class="border-bottom my-3 py-2">{{ recipe.detail_set.count }}개의 댓글이 있습니다.</h5>
     {% for detail in recipe.detail_set.all %}
     <a id="detail_{{ detail.id }}"></a>
@@ -74,23 +149,9 @@
         </div>
     </div>
     {% endfor %}
-    <!-- 상세 정보 등록 -->
+    <!-- 댓글 등록 -->
     <form action="{% url 'recipe:detail_create' recipe.id %}" method="post" class="my-3">
         {% csrf_token %}
-        <!-- 오류 표시 Start -->
-        {% if form.errors %}
-        <div class="alert alert-danger" role="alert">
-            {% for field in form %}
-            {% if field.errors %}
-            <div>
-                <strong>{{ field.label }}</strong>
-                {{ field.errors }}
-            </div>
-            {% endif %}
-            {% endfor %}
-        </div>
-        {% endif %}
-        <!-- 오류 표시 End -->
         <div class="mb-3">
             <div class="mb-3">
                 <label for="score" class="form-label">평가</label>

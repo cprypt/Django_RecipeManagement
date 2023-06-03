@@ -8,7 +8,48 @@
         </div>
         <div class="col-6">
             <div class="input-group">
-                <input type="text" id="search_kw" class="form-control" value="{{ kw|default_if_none:'' }}">
+                {% if cate == "한식" %}
+                <select class="form-control" id="category">
+                    <option value="">전체</option>
+                    <option value="한식" selected>한식</option>
+                    <option value="중식">중식</option>
+                    <option value="일식">일식</option>
+                    <option value="양식">양식</option>
+                </select>
+                {% elif cate == "중식" %}
+                <select class="form-control" id="category">
+                    <option value="">전체</option>
+                    <option value="한식">한식</option>
+                    <option value="중식" selected>중식</option>
+                    <option value="일식">일식</option>
+                    <option value="양식">양식</option>
+                </select>
+                {% elif cate == "일식" %}
+                <select class="form-control" id="category">
+                    <option value="">전체</option>
+                    <option value="한식">한식</option>
+                    <option value="중식">중식</option>
+                    <option value="일식" selected>일식</option>
+                    <option value="양식">양식</option>
+                </select>
+                {% elif cate == "양식" %}
+                <select class="form-control" id="category">
+                    <option value="">전체</option>
+                    <option value="한식">한식</option>
+                    <option value="중식">중식</option>
+                    <option value="일식">일식</option>
+                    <option value="양식" selected>양식</option>
+                </select>
+                {% else %}
+                <select class="form-control" id="category">
+                    <option value="" selected>전체</option>
+                    <option value="한식">한식</option>
+                    <option value="중식">중식</option>
+                    <option value="일식">일식</option>
+                    <option value="양식">양식</option>
+                </select>
+                {% endif %}
+                <input type="text" id="search_kw" class="form-control" placeholder="레시피 이름 / 재료 이름 / 작성자" value="{{ kw|default_if_none:'' }}">
                 <div class="input-group-append">
                     <button class="btn btn-outline-secondary" type="button" id="btn_search">검색</button>
                 </div>
@@ -95,6 +136,7 @@
     <!-- 페이징 처리 끝 -->
 </div>
 <form id="searchForm" method="get" action="{% url 'index' %}">
+    <input type="hidden" id="cate" name="cate" value="{{ cate|default_if_none:'' }}">
     <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}">
     <input type="hidden" id="page" name="page" value="{{ page }}">
 </form>
@@ -110,6 +152,7 @@
     });
     const btn_search = document.getElementById("btn_search");
     btn_search.addEventListener('click', function () {
+        document.getElementById('cate').value = document.getElementById('category').value;
         document.getElementById('kw').value = document.getElementById('search_kw').value;
         document.getElementById('page').value = 1;  // 검색버튼을 클릭할 경우 1페이지부터 조회한다.
         document.getElementById('searchForm').submit();

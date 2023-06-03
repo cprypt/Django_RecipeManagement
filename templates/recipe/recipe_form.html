@@ -28,7 +28,47 @@
         </div>
         <div class="mb-3">
             <label for="category" class="form-label">카테고리</label>
-            <input type="text" class="form-control" name="category" id="category" value="{{ form.category.value|default_if_none:'' }}">
+            {% if form.category.value == "한식" %}
+            <select class="form-control" name="category" id="category">
+                <option value="" disabled>=== 선택 ===</option>
+                <option value="한식" selected>한식</option>
+                <option value="중식">중식</option>
+                <option value="일식">일식</option>
+                <option value="양식">양식</option>
+            </select>
+            {% elif form.category.value == "중식" %}
+            <select class="form-control" name="category" id="category">
+                <option value="" disabled>=== 선택 ===</option>
+                <option value="한식">한식</option>
+                <option value="중식" selected>중식</option>
+                <option value="일식">일식</option>
+                <option value="양식">양식</option>
+            </select>
+            {% elif form.category.value == "일식" %}
+            <select class="form-control" name="category" id="category">
+                <option value="" disabled>=== 선택 ===</option>
+                <option value="한식">한식</option>
+                <option value="중식">중식</option>
+                <option value="일식" selected>일식</option>
+                <option value="양식">양식</option>
+            </select>
+            {% elif form.category.value == "양식" %}
+            <select class="form-control" name="category" id="category">
+                <option value="" disabled>=== 선택 ===</option>
+                <option value="한식">한식</option>
+                <option value="중식">중식</option>
+                <option value="일식">일식</option>
+                <option value="양식" selected>양식</option>
+            </select>
+            {% else %}
+            <select class="form-control" name="category" id="category">
+                <option value="" selected disabled>=== 선택 ===</option>
+                <option value="한식">한식</option>
+                <option value="중식">중식</option>
+                <option value="일식">일식</option>
+                <option value="양식">양식</option>
+            </select>
+            {% endif %}
         </div>
         <div class="mb-3">
             <label for="level" class="form-label">난이도</label>

@@ -20,7 +20,7 @@ class Recipe(models.Model):
 
 class Element(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
+    ename = models.CharField(max_length=100)
     put = models.IntegerField()
     unit = models.CharField(max_length=100)
     

@@ -19,9 +19,9 @@ class RecipeForm(forms.ModelForm):
 class ElementForm(forms.ModelForm):
     class Meta:
         model = Element
-        fields = ['name', 'put', 'unit']
+        fields = ['ename', 'put', 'unit']
         labels = {
-            'name': '재료 이름',
+            'ename': '재료 이름',
             'put': '투입 용량',
             'unit': '용량 단위',
         }
@@ -32,9 +32,7 @@ class CookingForm(forms.ModelForm):
         model = Cooking
         fields = ['process']
         labels = {
-            'name': '조리 순서',
             'process': '조리 방법',
-            'unit': '용량 단위',
         }
 
 
