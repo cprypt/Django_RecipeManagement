@@ -1,5 +1,5 @@
 from django import forms
-from recipe.models import Recipe, Detail
+from recipe.models import Recipe, Element, Cooking, Detail
 
 
 class RecipeForm(forms.ModelForm):
@@ -13,6 +13,28 @@ class RecipeForm(forms.ModelForm):
             'level': '난이도',
             'tool': '조리 도구',
             'duration': '조리 시간',
+        }
+        
+        
+class ElementForm(forms.ModelForm):
+    class Meta:
+        model = Element
+        fields = ['name', 'put', 'unit']
+        labels = {
+            'name': '재료 이름',
+            'put': '투입 용량',
+            'unit': '용량 단위',
+        }
+
+
+class CookingForm(forms.ModelForm):
+    class Meta:
+        model = Cooking
+        fields = ['process']
+        labels = {
+            'name': '조리 순서',
+            'process': '조리 방법',
+            'unit': '용량 단위',
         }
 
 

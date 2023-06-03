@@ -12,8 +12,7 @@ def index(request):
     if kw:
         recipe_list = recipe_list.filter(
             Q(name__icontains=kw) |  # 이름 검색
-            Q(tool__icontains=kw) |  # 종류 검색
-            Q(detail__content__icontains=kw) |  # 상세 정보 검색
+            Q(category__icontains=kw) |  # 카테고리 검색
             Q(author__username__icontains=kw)  # 레시피 작성자 검색
         ).distinct()
     paginator = Paginator(recipe_list, 5)  # 페이지당 5개씩 보여주기

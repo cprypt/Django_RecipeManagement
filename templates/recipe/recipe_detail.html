@@ -46,12 +46,13 @@
         </div>
     </div>
     <!-- 상세 정보 -->
-    <h5 class="border-bottom my-3 py-2">{{recipe.detail_set.count}}개의 댓글이 있습니다.</h5>
+    <h5 class="border-bottom my-3 py-2">{{ recipe.detail_set.count }}개의 댓글이 있습니다.</h5>
     {% for detail in recipe.detail_set.all %}
     <a id="detail_{{ detail.id }}"></a>
     <div class="card my-3">
         <div class="card-body">
-            <div class="card-text">{{ detail.content|mark }}</div>
+            <div class="card-text">평가: {{ detail.score }}</div>
+            <div class="card-text">후기{{ detail.content|mark }}</div>
             <div class="d-flex justify-content-end">
                 {% if detail.modify_date %}
                 <div class="badge bg-light text-dark p-2 text-start mx-3">
