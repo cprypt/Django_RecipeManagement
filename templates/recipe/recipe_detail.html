@@ -16,65 +16,87 @@
     <!-- 기본 정보 -->
     <h2 class="border-bottom py-2">{{ recipe.name }}</h2>
     <div class="card my-3">
-        <div class="card-body">
-            <div class="card-text">
+        <div class="card-body row g-3">
+            <div class="card-text col-md-8">
                 <img src="{{ recipe.image.url }}" class="img-thumbnail" width="500">
             </div>
-            <div class="card-text">카테고리: {{ recipe.category }}</div>
-            <div class="card-text">난이도: {% for i in "x"|rjust:recipe.level %}★{% endfor %}</div>
-            <div class="card-text">조리 도구: {{ recipe.tool }}</div>
-            <div class="card-text">조리 시간: {{ recipe.duration }}</div>
-            <div class="d-flex justify-content-end">
-                {% if recipe.modify_date %}
-                <div class="badge bg-light text-dark p-2 text-start mx-3">
-                    <div class="mb-2">최종 수정</div>
-                    <div>{{ recipe.modify_date }}</div>
+            <div class="col-md-4">
+                <div class="card text-bg-dark mb-3">
+                    <div class="card-header">카테고리</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ recipe.category }}</h5>
+                    </div>
                 </div>
-                {% endif %}
-                <div class="badge bg-light text-dark p-2 text-start">
-                    <div class="mb-2">{{ recipe.author.username }}</div>
-                    <div>{{ recipe.create_date }}</div>
+                <div class="card text-bg-dark mb-3">
+                    <div class="card-header">난이도</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{% for i in "x"|rjust:recipe.level %}★{% endfor %}</h5>
+                    </div>
+                </div>
+                <div class="card text-bg-dark mb-3">
+                    <div class="card-header">조리 도구</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ recipe.tool }}</h5>
+                    </div>
+                </div>
+                <div class="card text-bg-dark mb-3">
+                    <div class="card-header">조리 시간</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ recipe.duration }}</h5>
+                    </div>
                 </div>
             </div>
-            <div class="my-3">
-                {% if request.user == recipe.author %}
-                <a href="{% url 'recipe:recipe_modify' recipe.id  %}" class="btn btn-sm btn-outline-dark">수정</a>
-                <a href="javascript:void(0)" class="delete btn btn-sm btn-outline-dark" data-uri="{% url 'recipe:recipe_delete' recipe.id  %}">삭제</a>
-                {% endif %}
+            <!-- 재료 -->
+            {% for element in recipe.element_set.all %}
+            <div class="card text-bg-dark mb-3 col-md-2">
+                <div class="card-header">재료</div>
+                <div class="card-body text-dark">
+                    <h5 class="card-title">{{ element.ename }}</h5>
+                    <p class="card-text">{{ element.put }}{{ element.unit }}</p>
+                </div>
+                <div class="card my-3">
+                    {% if request.user == recipe.author %}
+                    <a href="#" class="delete btn btn-sm btn-outline-secondary " data-uri="{% url 'recipe:element_delete' element.id  %}">삭제</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            <!-- 조리법 -->
+            {% for cooking in recipe.cooking_set.all %}
+            <div class="card text-bg-dark mb-3 col-md-4">
+                <div class="card-header">조리 방법 {{ cooking.order }}</div>
+                <div class="card-body text-dark">
+                    <p class="card-text">{{ cooking.process|mark }}</p>
+                </div>
+                <div class="card my-3">
+                    {% if request.user == recipe.author %}
+                    <a href="#" class="delete btn btn-sm btn-outline-secondary " data-uri="{% url 'recipe:cooking_delete' cooking.id  %}">삭제</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            <div class="row g-3 col-md-12">
+                <div class="my-3 col-md-6">
+                    {% if request.user == recipe.author %}
+                    <a href="{% url 'recipe:recipe_modify' recipe.id  %}" class="btn btn-sm btn-outline-secondary">수정</a>
+                    <a href="javascript:void(0)" class="delete btn btn-sm btn-outline-secondary" data-uri="{% url 'recipe:recipe_delete' recipe.id  %}">삭제</a>
+                    {% endif %}
+                </div>
+                <div class="d-flex justify-content-end col-md-6">
+                    {% if recipe.modify_date %}
+                    <div class="badge bg-light text-dark p-2 text-start mx-3">
+                        <div class="mb-2">최종 수정</div>
+                        <div>{{ recipe.modify_date }}</div>
+                    </div>
+                    {% endif %}
+                    <div class="badge bg-light text-dark p-2 text-start">
+                        <div class="mb-2">{{ recipe.author.username }}</div>
+                        <div>{{ recipe.create_date }}</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <!-- 재료 -->
-    {% for element in recipe.element_set.all %}
-    <a id="element_{{ element.id }}"></a>
-    <div class="card my-3">
-        <div class="card-body">
-            <div class="card-text">재료 이름: {{ element.ename }}</div>
-            <div class="card-text">투입 용량: {{ element.put }}</div>
-            <div class="card-text">용량 단위: {{ element.unit }}</div>
-            <div class="my-3">
-                {% if request.user == recipe.author %}
-                <a href="#" class="delete btn btn-sm btn-outline-dark " data-uri="{% url 'recipe:element_delete' element.id  %}">삭제</a>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-    {% endfor %}
-    <!-- 조리법 -->
-    {% for cooking in recipe.cooking_set.all %}
-    <a id="cooking_{{ cooking.id }}"></a>
-    <div class="card my-3">
-        <div class="card-body">
-            <div class="card-text">조리 순서: {{ cooking.order }}</div>
-            <div class="card-text">{{ cooking.process|mark }}</div>
-            <div class="my-3">
-                {% if request.user == recipe.author %}
-                <a href="#" class="delete btn btn-sm btn-outline-dark " data-uri="{% url 'recipe:cooking_delete' cooking.id  %}">삭제</a>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-    {% endfor %}
     <!-- 재료 등록 -->
     <div class="row g-3">
         {% if request.user == recipe.author %}
@@ -140,14 +162,20 @@
     {% endif %}
     <!-- 오류 표시 End -->
     <!-- 후기 -->
-    <h5 class="border-bottom my-3 py-2">{{ recipe.detail_set.count }}개의 후기가 있습니다.</h5>
+    <h5 class="border-bottom my-3 py-2">후기 {{ recipe.detail_set.count }}개</h5>
     {% for detail in recipe.detail_set.all %}
     <a id="detail_{{ detail.id }}"></a>
     <div class="card my-3">
-        <div class="card-body">
-            <div class="card-text">{% for i in ""|ljust:detail.score %}★{% endfor %}</div>
+        <div class="card-body row g-3">
+            <div class="card-title">{% for i in ""|ljust:detail.score %}★{% endfor %}</div>
             <div class="card-text">{{ detail.content|mark }}</div>
-            <div class="d-flex justify-content-end">
+            <div class="my-3 col-md-6">
+                {% if request.user == detail.author %}
+                <a href="{% url 'recipe:detail_modify' detail.id  %}" class="btn btn-sm btn-outline-secondary">수정</a>
+                <a href="#" class="delete btn btn-sm btn-outline-secondary" data-uri="{% url 'recipe:detail_delete' detail.id  %}">삭제</a>
+                {% endif %}
+            </div>
+            <div class="d-flex justify-content-end col-md-6">
                 {% if detail.modify_date %}
                 <div class="badge bg-light text-dark p-2 text-start mx-3">
                     <div class="mb-2">최종 수정</div>
@@ -158,12 +186,6 @@
                     <div class="mb-2">{{ detail.author.username }}</div>
                     <div>{{ detail.create_date }}</div>
                 </div>
-            </div>
-            <div class="my-3">
-                {% if request.user == detail.author %}
-                <a href="{% url 'recipe:detail_modify' detail.id  %}" class="btn btn-sm btn-outline-dark">수정</a>
-                <a href="#" class="delete btn btn-sm btn-outline-dark" data-uri="{% url 'recipe:detail_delete' detail.id  %}">삭제</a>
-                {% endif %}
             </div>
         </div>
     </div>
