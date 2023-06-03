@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load recipe_filter %}
+{% block content %}
+<div class="container my-3">
+    <!-- message 표시 -->
+    {% if messages %}
+    <div class="alert alert-danger my-3" role="alert">
+        {% for message in messages %}
+        <strong>{{ message.tags }}</strong>
+        <ul>
+            <li>{{ message.message }}</li>
+        </ul>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <!-- 기본 정보 -->
+    <h2 class="border-bottom py-2">레시피 이름: {{ recipe.name }}</h2>
+    <div class="card my-3">
+        <div class="card-body">
+            <div class="card-text">
+                레시피 사진:
+                <img src="{{ recipe.image.url }}" width="300">
+            </div>
+            <div class="card-text">카테고리: {{ recipe.category }}</div>
+            <div class="card-text">난이도: {{ recipe.level }}</div>
+            <div class="card-text">조리 도구: {{ recipe.tool }}</div>
+            <div class="card-text">조리 시간: {{ recipe.duration }}</div>
+            <div class="d-flex justify-content-end">
+                {% if recipe.modify_date %}
+                <div class="badge bg-light text-dark p-2 text-start mx-3">
+                    <div class="mb-2">최종 수정</div>
+                    <div>{{ recipe.modify_date }}</div>
+                </div>
+                {% endif %}
+                <div class="badge bg-light text-dark p-2 text-start">
+                    <div class="mb-2">{{ recipe.author.username }}</div>
+                    <div>{{ recipe.create_date }}</div>
+                </div>
+            </div>
+            <div class="my-3">
+                {% if request.user == recipe.author %}
+                <a href="{% url 'recipe:recipe_modify' recipe.id  %}" class="btn btn-sm btn-outline-secondary">수정</a>
+                <a href="javascript:void(0)" class="delete btn btn-sm btn-outline-secondary" data-uri="{% url 'recipe:recipe_delete' recipe.id  %}">삭제</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- 상세 정보 -->
+    <h5 class="border-bottom my-3 py-2">{{recipe.detail_set.count}}개의 댓글이 있습니다.</h5>
+    {% for detail in recipe.detail_set.all %}
+    <a id="detail_{{ detail.id }}"></a>
+    <div class="card my-3">
+        <div class="card-body">
+            <div class="card-text">{{ detail.content|mark }}</div>
+            <div class="d-flex justify-content-end">
+                {% if detail.modify_date %}
+                <div class="badge bg-light text-dark p-2 text-start mx-3">
+                    <div class="mb-2">최종 수정</div>
+                    <div>{{ detail.modify_date }}</div>
+                </div>
+                {% endif %}
+                <div class="badge bg-light text-dark p-2 text-start">
+                    <div class="mb-2">{{ detail.author.username }}</div>
+                    <div>{{ detail.create_date }}</div>
+                </div>
+            </div>
+            <div class="my-3">
+                {% if request.user == detail.author %}
+                <a href="{% url 'recipe:detail_modify' detail.id  %}" class="btn btn-sm btn-outline-secondary">수정</a>
+                <a href="#" class="delete btn btn-sm btn-outline-secondary " data-uri="{% url 'recipe:detail_delete' detail.id  %}">삭제</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <!-- 상세 정보 등록 -->
+    <form action="{% url 'recipe:detail_create' recipe.id %}" method="post" class="my-3">
+        {% csrf_token %}
+        <!-- 오류 표시 Start -->
+        {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            {% for field in form %}
+            {% if field.errors %}
+            <div>
+                <strong>{{ field.label }}</strong>
+                {{ field.errors }}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        <!-- 오류 표시 End -->
+        <div class="mb-3">
+            <div class="mb-3">
+                <label for="score" class="form-label">평가</label>
+                <input type="range" class="form-control" name="score" id="score" min="1" max="10" step="1">
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label">후기</label>
+                <textarea name="content" id="content" class="form-control" rows="3"></textarea>
+            </div>
+        </div>
+        <input type="submit" value="저장" class="btn btn-primary">
+    </form>
+</div>
+{% endblock %}
+{% block script %}
+<script type='text/javascript'>
+    const delete_elements = document.getElementsByClassName("delete");
+    Array.from(delete_elements).forEach(function (element) {
+        element.addEventListener('click', function () {
+            if (confirm("정말로 삭제하시겠습니까?")) {
+                location.href = this.dataset.uri;
+            };
+        });
+    });
+</script>
+{% endblock %}

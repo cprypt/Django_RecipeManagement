@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h5 class="my-3 border-bottom pb-2">레시피 등록</h5>
+    <form method="post", enctype="multipart/form-data">
+        {% csrf_token %}
+        <!-- 오류표시 Start -->
+        {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            {% for field in form %}
+            {% if field.errors %}
+            <div>
+                <strong>{{ field.label }}</strong>
+                {{ field.errors }}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        <!-- 오류표시 End -->
+        <div class="mb-3">
+            <label for="name" class="form-label">레시피 이름</label>
+            <input type="text" class="form-control" name="name" id="name" value="{{ form.name.value|default_if_none:'' }}">
+        </div>
+        <div class="mb-3">
+            <label for="image" class="form-label">레시피 사진</label>
+            <div type="file" class="form-control" name="image" id="image">{{ form.image|default_if_none:'' }}</div>
+        </div>
+        <div class="mb-3">
+            <label for="category" class="form-label">카테고리</label>
+            <input type="text" class="form-control" name="category" id="category" value="{{ form.category.value|default_if_none:'' }}">
+        </div>
+        <div class="mb-3">
+            <label for="level" class="form-label">난이도</label>
+            <input type="range" class="form-control" name="level" id="level" min="1" max="10" step="1" value="{{ form.level.value|default_if_none:'' }}">
+        </div>
+        <div class="mb-3">
+            <label for="tool" class="form-label">조리 도구</label>
+            <input type="text" class="form-control" name="tool" id="tool" value="{{ form.tool.value|default_if_none:'' }}">
+        </div>
+        <div class="mb-3">
+            <label for="duration" class="form-label">조리 시간</label>
+            <input type="text" class="form-control" name="duration" id="duration" value="{{ form.duration.value|default_if_none:'' }}">
+        </div>
+        <button type="submit" class="btn btn-primary">저장</button>
+    </form>
+</div>
+{% endblock %}
