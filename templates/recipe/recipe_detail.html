@@ -47,34 +47,38 @@
                 </div>
             </div>
             <!-- 재료 -->
-            {% for element in recipe.element_set.all %}
-            <div class="card text-bg-dark mb-3 col-md-2">
-                <div class="card-header">재료</div>
-                <div class="card-body text-dark">
-                    <h5 class="card-title">{{ element.ename }}</h5>
-                    <p class="card-text">{{ element.put }}{{ element.unit }}</p>
+            <div class="row g-3">
+                {% for element in recipe.element_set.all %}
+                <div class="card text-bg-dark mb-3 col-md-2">
+                    <div class="card-header">재료</div>
+                    <div class="card-body text-dark">
+                        <h5 class="card-title">{{ element.ename }}</h5>
+                        <p class="card-text">{{ element.put }}{{ element.unit }}</p>
+                    </div>
+                    <div class="card my-3">
+                        {% if request.user == recipe.author %}
+                        <a href="#" class="delete btn btn-sm btn-outline-secondary " data-uri="{% url 'recipe:element_delete' element.id  %}">삭제</a>
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="card my-3">
-                    {% if request.user == recipe.author %}
-                    <a href="#" class="delete btn btn-sm btn-outline-secondary " data-uri="{% url 'recipe:element_delete' element.id  %}">삭제</a>
-                    {% endif %}
-                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
             <!-- 조리법 -->
-            {% for cooking in recipe.cooking_set.all %}
-            <div class="card text-bg-dark mb-3 col-md-4">
-                <div class="card-header">조리 방법 {{ cooking.order }}</div>
-                <div class="card-body text-dark">
-                    <p class="card-text">{{ cooking.process|mark }}</p>
+            <div class="row g-3">
+                {% for cooking in recipe.cooking_set.all %}
+                <div class="card text-bg-dark mb-3 col-md-4">
+                    <div class="card-header">조리 방법 {{ cooking.order }}</div>
+                    <div class="card-body text-dark">
+                        <p class="card-text">{{ cooking.process|mark }}</p>
+                    </div>
+                    <div class="card my-3">
+                        {% if request.user == recipe.author %}
+                        <a href="#" class="delete btn btn-sm btn-outline-secondary " data-uri="{% url 'recipe:cooking_delete' cooking.id  %}">삭제</a>
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="card my-3">
-                    {% if request.user == recipe.author %}
-                    <a href="#" class="delete btn btn-sm btn-outline-secondary " data-uri="{% url 'recipe:cooking_delete' cooking.id  %}">삭제</a>
-                    {% endif %}
-                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
             <div class="row g-3 col-md-12">
                 <div class="my-3 col-md-6">
                     {% if request.user == recipe.author %}
