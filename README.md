@@ -1,6 +1,6 @@
 # 1. 소스 코드 GitHub: https://github.com/cprypt/RecipeManagement.git
 ----------
-# 2. 프로젝트 소개 영상: 
+# 2. 프로젝트 소개 영상: https://youtu.be/9VDscExYWd0
 ----------
 # 3. 사용자 가이드
 1. 사용자가 처음 시스템에 접속한 후 네비게이션 바에 있는 회원가입 버튼을 누른 후 아이디, 비밀번호, 이메일을 입력하여 회원 정보를 DB에 전송한다.
